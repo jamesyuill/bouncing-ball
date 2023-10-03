@@ -69,18 +69,6 @@ function init(e) {
   // Orbit Controls
   const controls = new OrbitControls(camera, renderer.domElement);
 
-  //Test Ball
-  const sphereGeo = new THREE.SphereGeometry(0.7, 36, 16);
-  const sphereMat = new THREE.MeshStandardMaterial({
-    color: 0xff69b4,
-  });
-  const sphereMesh = new THREE.Mesh(sphereGeo, sphereMat);
-
-  sphereMesh.castShadow = true;
-  sphereMesh.position.y = 1;
-  newMeshArray.push(sphereMesh);
-  scene.add(sphereMesh);
-
   // Floor Mesh
   const planeGeo = new THREE.PlaneGeometry(30, 30, 10, 10);
   const planeMat = new THREE.MeshStandardMaterial({

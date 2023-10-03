@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { renderer, camera, scene, sound, audioLoader, listener } from './main';
+import * as Tone from 'tone';
+const synth = new Tone.Synth().toDestination();
+const now = Tone.now();
 
 export default class ballClass extends THREE.Mesh {
   constructor() {
@@ -24,14 +27,16 @@ export default class ballClass extends THREE.Mesh {
     this.castShadow = true;
     this.userData.id = Date.now();
 
-    audioLoader.load('sounds/basketball.mp3', function (buffer) {
-      sound.setBuffer(buffer);
-      sound.setVolume(0.7);
-    });
+    // audioLoader.load('sounds/basketball.mp3', function (buffer) {
+    //   sound.setBuffer(buffer);
+    //   sound.setVolume(0.7);
+    // });
+
+    let notesArray = ['A4', 'B4', 'C4', 'D4', 'E4', 'F4', 'G4'];
+    let randomNote = notesArray[Math.floor(Math.random() * 8)];
 
     this.bounce = () => {
-      sound.stop();
-      sound.play();
+      synth.triggerAttackRelease(randomNote, '32n');
     };
 
     // if (this.position.y === this.bottom_position_y) {
