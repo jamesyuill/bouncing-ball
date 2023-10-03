@@ -1,18 +1,26 @@
 import * as THREE from 'three';
 import * as Tone from 'tone';
 
-const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-synth.set({ oscillator: { type: 'sine' } });
-const now = Tone.now();
+import { synth, now } from './synth';
+// const synth = new Tone.PolySynth(Tone.Synth);
+// synth.set({ oscillator: { type: 'sine' } });
+// const now = Tone.now();
+// const feedbackDelay = new Tone.FeedbackDelay({
+//   delayTime: 0.5,
+//   feedback: 0.3,
+//   // maxDelay:2,
+//   wet: 0.3,
+// });
+
+// synth.connect(feedbackDelay);
+// feedbackDelay.toDestination();
 
 export default class ballClass extends THREE.Mesh {
   constructor() {
     let geometry = new THREE.SphereGeometry(0.7, 36, 16);
-    let material = new THREE.MeshStandardMaterial({
-      color: 0xff69b4,
-    });
+    let material = new THREE.MeshStandardMaterial({});
     super(geometry, material);
-
+    this.material.color.set(0xff0000);
     this.acceleration = 100;
     this.bounce_distance = 6;
     this.bottom_position_y = 1;
@@ -28,9 +36,8 @@ export default class ballClass extends THREE.Mesh {
     this.castShadow = true;
     this.userData.id = Date.now();
 
-    let notesArray = ['F4', 'G4', 'Ab4', 'Bb4', 'C4', 'D4', 'E4', 'F4'];
+    let notesArray = ['F4', 'G4', 'G#4', 'Bb4', 'C4', 'D4', 'E4', 'F4'];
     let randomNote = notesArray[Math.floor(Math.random() * 9)];
-
     this.bounce = () => {
       synth.triggerAttack(randomNote, now);
       synth.triggerRelease(randomNote);

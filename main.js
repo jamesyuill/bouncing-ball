@@ -33,8 +33,9 @@ function init(e) {
     newMeshArray.push(ballExp);
     scene.add(ballExp);
     const ballFolder = gui.addFolder(`Ball ${ballCount}`);
-    ballFolder.add(ballExp, 'acceleration', 100, 200);
-    ballFolder.add(ballExp, 'time_step', 0.01, 0.1);
+    ballFolder.add(ballExp, 'acceleration', 100, 300);
+    ballFolder.add(ballExp, 'time_step', 0.01, 0.3);
+
     ballFolder.open();
     ballCount++;
   });
@@ -58,7 +59,7 @@ function init(e) {
 
   // Lighting
   const light = new THREE.DirectionalLight(0xffffff, 3);
-  light.position.set(6, 9, 0);
+  light.position.set(0, 9, 6);
   // const helper = new THREE.DirectionalLightHelper(light, 10, 0xffffff);
   light.castShadow = true;
   scene.add(light);
