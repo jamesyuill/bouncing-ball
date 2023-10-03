@@ -3,10 +3,24 @@ body {
   box-sizing: border-box;
 }
 
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 .overlay {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100vh;
+  margin-top: 50px;
+}
+
+.add-button-div {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  position: relative;
+  z-index: 2;
 }

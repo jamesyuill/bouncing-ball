@@ -3,16 +3,18 @@ import './style.css';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 import ballClass from './ballClass';
-const scene = new THREE.Scene();
-const listener = new THREE.AudioListener();
-const sound = new THREE.Audio(listener);
-const audioLoader = new THREE.AudioLoader();
-
+export const scene = new THREE.Scene();
+export const listener = new THREE.AudioListener();
+export const sound = new THREE.Audio(listener);
+export const audioLoader = new THREE.AudioLoader();
+export const renderer = new THREE.WebGLRenderer();
+export const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
 // Audio Loader
-audioLoader.load('sounds/basketball.mp3', function (buffer) {
-  sound.setBuffer(buffer);
-  sound.setVolume(0.7);
-});
 
 const startButton = document.getElementById('startButton');
 startButton.addEventListener('click', init);
@@ -23,21 +25,18 @@ function init(e) {
   const overlay = document.getElementById('overlay');
   overlay.remove();
 
+  const newMeshArray = [];
   const newButton = document.createElement('button');
   newButton.innerText = 'click to add ball';
   newButton.addEventListener('click', () => {
     const ballExp = new ballClass();
+    newMeshArray.push(ballExp);
     scene.add(ballExp);
   });
   document.getElementById('add-button-div').appendChild(newButton);
 
   // Camera
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
+
   camera.lookAt(0.0, 0.0, 0.0);
   camera.add(listener);
   camera.updateMatrixWorld();
@@ -45,7 +44,7 @@ function init(e) {
   camera.position.y = 15;
 
   // Renderer
-  const renderer = new THREE.WebGLRenderer();
+
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xffffff, 1);
   renderer.shadowMap.enabled = true;
@@ -54,7 +53,7 @@ function init(e) {
 
   // Lighting
   const light = new THREE.DirectionalLight(0xffffff, 3);
-  light.position.set(5, 8, 0);
+  light.position.set(6, 9, 0);
   // const helper = new THREE.DirectionalLightHelper(light, 10, 0xffffff);
   light.castShadow = true;
   scene.add(light);
@@ -79,6 +78,7 @@ function init(e) {
 
   sphereMesh.castShadow = true;
   sphereMesh.position.y = 1;
+  newMeshArray.push(sphereMesh);
   scene.add(sphereMesh);
 
   // Floor Mesh
@@ -93,87 +93,48 @@ function init(e) {
   planeMesh.position.y = 0;
   planeMesh.rotation.x = Math.PI / 2;
 
-  // const options = {
-  //   acc: acceleration,
-  //   velx: 0,
-  //   vely: 0,
-  //   camera: {
-  //     speed: 0.0001,
-  //   },
-  //   stop: function () {
-  //     this.velx = 0;
-  //     this.vely = 0;
-  //   },
-  //   reset: function () {
-  //     this.velx = 0.1;
-  //     this.vely = 0.1;
-  //     camera.position.z = 75;
-  //     camera.position.x = 0;
-  //     camera.position.y = 0;
-  //     cube.scale.x = 1;
-  //     cube.scale.y = 1;
-  //     cube.scale.z = 1;
-  //     cube.material.wireframe = true;
-  //   },
-  // };
-
-  // DAT.GUI Related Stuff
-
-  var gui = new dat.GUI();
-
-  // var cam = gui.addFolder('Camera');
-  // cam.add(options.camera, 'speed', 0, 0.0010).listen();
-  // cam.add(camera.position, 'y', 0, 100).listen();
-  // cam.open();
-
-  // var velocity = gui.addFolder('Velocity');
-  // velocity.add(options, 'velx', -0.2, 0.2).name('X').listen();
-  // velocity.add(options, 'vely', -0.2, 0.2).name('Y').listen();
-  // velocity.open();
-
-  const ball = gui.addFolder('Ball');
-  // ball.add(cube.scale, 'x', 0, 3).name('Width').listen();
-  // ball.add(cube.scale, 'y', 0, 3).name('Height').listen();
-  // ball.add(cube.scale, 'z', 0, 3).name('Length').listen();
-  // ball.add(options, 'acc', 0, 150).name('BPM').listen();
-  ball.add(sphereMesh.material, 'wireframe').listen();
-  // box.open();
-
-  // gui.add(options, 'stop');
-  // gui.add(options, 'reset');
-
   //Ball Acc Settings
-  let acceleration = 100; //bpm?
-  let bounce_distance = 6;
-  let bottom_position_y = 1;
-  let time_step = 0.02;
-  let time_counter = Math.sqrt((bounce_distance * 2) / acceleration);
-  let initial_speed = acceleration * time_counter;
+  // let acceleration = 100; //bpm?
+  // let bounce_distance = 6;
+  // let bottom_position_y = 1;
+  // let time_step = 0.02;
+  // let time_counter = Math.sqrt((bounce_distance * 2) / acceleration);
+  // let initial_speed = acceleration * time_counter;
 
   // Animate Function
   function animate() {
     requestAnimationFrame(animate);
-    if (sphereMesh.position.y < bottom_position_y) {
-      time_counter = 0;
-    }
 
-    sphereMesh.position.y =
-      bottom_position_y +
-      initial_speed * time_counter -
-      0.5 * acceleration * time_counter * time_counter;
-    // advance time
-    time_counter += time_step;
+    for (let i = 0; i < newMeshArray.length; i++) {
+      if (newMeshArray[i].position.y < newMeshArray[i].bottom_position_y) {
+        newMeshArray[i].time_counter = 0;
+      }
 
-    if (sphereMesh.position.y === bottom_position_y) {
-      sound.play();
-    }
+      newMeshArray[i].position.y =
+        newMeshArray[i].bottom_position_y +
+        newMeshArray[i].initial_speed * newMeshArray[i].time_counter -
+        0.5 *
+          newMeshArray[i].acceleration *
+          newMeshArray[i].time_counter *
+          newMeshArray[i].time_counter;
+      // advance time
+      newMeshArray[i].time_counter += newMeshArray[i].time_step;
 
-    if (sphereMesh.position.y === bottom_position_y && sound.isPlaying) {
-      sound.stop();
-      sound.play();
+      if (newMeshArray[i].position.y === newMeshArray[i].bottom_position_y) {
+        newMeshArray[i].bounce();
+      }
+
+      // if (
+      //   newMeshArray[i].position.y === newMeshArray[i].bottom_position_y &&
+      //   sound.isPlaying
+      // ) {
+      //   sound.stop();
+      //   sound.play();
+      // }
     }
 
     controls.update();
+
     renderer.render(scene, camera);
   }
   animate();
