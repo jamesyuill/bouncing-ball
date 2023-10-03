@@ -1,14 +1,12 @@
 import * as THREE from 'three';
 import './style.css';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import * as dat from 'dat.gui';
+import { GUI } from 'dat.gui';
 import ballClass from './ballClass';
-export const scene = new THREE.Scene();
-export const listener = new THREE.AudioListener();
-export const sound = new THREE.Audio(listener);
-export const audioLoader = new THREE.AudioLoader();
-export const renderer = new THREE.WebGLRenderer();
-export const camera = new THREE.PerspectiveCamera(
+const scene = new THREE.Scene();
+const listener = new THREE.AudioListener();
+const renderer = new THREE.WebGLRenderer();
+const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
@@ -25,6 +23,8 @@ function init(e) {
   const overlay = document.getElementById('overlay');
   overlay.remove();
 
+  const gui = new GUI();
+  let ballCount = 1;
   const newMeshArray = [];
   const newButton = document.createElement('button');
   newButton.innerText = 'click to add ball';
@@ -32,6 +32,11 @@ function init(e) {
     const ballExp = new ballClass();
     newMeshArray.push(ballExp);
     scene.add(ballExp);
+    const ballFolder = gui.addFolder(`Ball ${ballCount}`);
+    ballFolder.add(ballExp, 'acceleration', 100, 200);
+    ballFolder.add(ballExp, 'time_step', 0.01, 0.1);
+    ballFolder.open();
+    ballCount++;
   });
   document.getElementById('add-button-div').appendChild(newButton);
 
@@ -81,14 +86,6 @@ function init(e) {
   planeMesh.position.y = 0;
   planeMesh.rotation.x = Math.PI / 2;
 
-  //Ball Acc Settings
-  // let acceleration = 100; //bpm?
-  // let bounce_distance = 6;
-  // let bottom_position_y = 1;
-  // let time_step = 0.02;
-  // let time_counter = Math.sqrt((bounce_distance * 2) / acceleration);
-  // let initial_speed = acceleration * time_counter;
-
   // Animate Function
   function animate() {
     requestAnimationFrame(animate);
@@ -111,14 +108,6 @@ function init(e) {
       if (newMeshArray[i].position.y === newMeshArray[i].bottom_position_y) {
         newMeshArray[i].bounce();
       }
-
-      // if (
-      //   newMeshArray[i].position.y === newMeshArray[i].bottom_position_y &&
-      //   sound.isPlaying
-      // ) {
-      //   sound.stop();
-      //   sound.play();
-      // }
     }
 
     controls.update();
