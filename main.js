@@ -40,11 +40,6 @@ function init(e) {
   const newButton = document.createElement('button');
   newButton.innerText = 'click to add ball';
 
-  //RESET Button
-  const resetButton = document.createElement('button');
-  resetButton.innerText = 'Reset';
-  resetButton.addEventListener('click', () => {});
-
   newButton.addEventListener('click', () => {
     const ballExp = new BallClass();
     if (ballCount <= 1) {
@@ -70,7 +65,6 @@ function init(e) {
   });
 
   document.getElementById('add-button-div').appendChild(newButton);
-  document.getElementById('add-button-div').appendChild(resetButton);
 
   // Camera
 
