@@ -26,8 +26,8 @@ export default class BallClass extends THREE.Mesh {
     this.userData.id = Date.now();
     this.userData.isDown = false;
 
-    let notesArray = ['F4', 'G4', 'G#4', 'Bb4', 'C4', 'D4', 'E4', 'F4'];
-    let randomNote = notesArray[Math.floor(Math.random() * 8)];
+    let notesArray = ['C4', 'Eb4', 'G4', 'Bb4', 'D4', 'F4', 'Ab4'];
+    let randomNote = notesArray[Math.floor(Math.random() * 7)];
 
     this.bounce = () => {
       // player.start();
