@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import FloorClass from './FloorClass';
+import FloorClass from './floorClass';
 import { scene } from './main';
 // import { player } from './audioClip';
 import { synth, now } from './synth';
