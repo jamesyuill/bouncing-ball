@@ -1,21 +1,11 @@
 import * as THREE from 'three';
+import FloorClass from './FloorClass';
+import { scene } from './main';
 import * as Tone from 'tone';
-import { player } from './audioClip';
+// import { player } from './audioClip';
 import { synth, now } from './synth';
-// const synth = new Tone.PolySynth(Tone.Synth);
-// synth.set({ oscillator: { type: 'sine' } });
-// const now = Tone.now();
-// const feedbackDelay = new Tone.FeedbackDelay({
-//   delayTime: 0.5,
-//   feedback: 0.3,
-//   // maxDelay:2,
-//   wet: 0.3,
-// });
 
-// synth.connect(feedbackDelay);
-// feedbackDelay.toDestination();
-
-export default class ballClass extends THREE.Mesh {
+export default class BallClass extends THREE.Mesh {
   constructor() {
     let geometry = new THREE.SphereGeometry(0.7, 36, 16);
     let material = new THREE.MeshStandardMaterial({});
@@ -29,19 +19,36 @@ export default class ballClass extends THREE.Mesh {
       (this.bounce_distance * 2) / this.acceleration
     );
     this.initial_speed = this.acceleration * this.time_counter;
-    let x = Math.floor(Math.random() * (10 - -10 + 1)) + -10;
-    let z = Math.floor(Math.random() * (10 - -10 + 1)) + -10;
+    let x = 0;
+    let z = 0;
 
     this.position.set(x, 0.7, z);
     this.castShadow = true;
     this.userData.id = Date.now();
+    this.userData.isDown = false;
 
     let notesArray = ['F4', 'G4', 'G#4', 'Bb4', 'C4', 'D4', 'E4', 'F4'];
-    let randomNote = notesArray[Math.floor(Math.random() * 9)];
+    let randomNote = notesArray[Math.floor(Math.random() * 8)];
+
     this.bounce = () => {
-      player.start();
-      // synth.triggerAttack(randomNote, now);
-      // synth.triggerRelease(randomNote);
+      // player.start();
+
+      synth.triggerAttack(randomNote, now);
+      synth.triggerRelease(randomNote);
+    };
+
+    this.floor = new FloorClass();
+    this.floor.scale.y = 10;
+    this.floor.position.z = 4;
+    scene.add(this.floor);
+
+    this.changeFloorColor = () => {
+      if (this.userData.isDown) {
+        this.floor.material.color.setHex(0xff0000);
+        setTimeout(() => {
+          this.floor.material.color.setHex(0xffffff);
+        }, 100);
+      }
     };
   }
 }
