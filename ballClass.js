@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import FloorClass from './FloorClass';
+const FloorClass = require('./FloorClass');
 import { scene } from './main';
-import * as Tone from 'tone';
 // import { player } from './audioClip';
 import { synth, now } from './synth';
 
