@@ -36,9 +36,14 @@ function init(e) {
 
   let ballCount = 1;
   let spacer = -6;
-  const newMeshArray = [];
+  let newMeshArray = [];
   const newButton = document.createElement('button');
   newButton.innerText = 'click to add ball';
+
+  //RESET Button
+  const resetButton = document.createElement('button');
+  resetButton.innerText = 'Reset';
+  resetButton.addEventListener('click', () => {});
 
   newButton.addEventListener('click', () => {
     const ballExp = new BallClass();
@@ -63,7 +68,9 @@ function init(e) {
       document.getElementById('add-button-div').removeChild(newButton);
     }
   });
+
   document.getElementById('add-button-div').appendChild(newButton);
+  document.getElementById('add-button-div').appendChild(resetButton);
 
   // Camera
 
