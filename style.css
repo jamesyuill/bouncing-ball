@@ -10,11 +10,13 @@ body {
   width: 100%;
 }
 
-.overlay {
+.start-button-div {
   display: flex;
   justify-content: center;
-  align-items: center;
+
   margin-top: 50px;
+  position: relative;
+  z-index: 2;
 }
 
 .add-button-div {
