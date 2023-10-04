@@ -1,11 +1,14 @@
 import * as THREE from 'three';
+import * as Tone from 'tone';
 import './style.css';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
-import ballClass from './ballClass';
-const scene = new THREE.Scene();
+import BallClass from './BallClass';
+import FloorClass from './FloorClass';
+import { crusher, shift, feedbackDelay } from './synth';
+export const scene = new THREE.Scene();
 const listener = new THREE.AudioListener();
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
@@ -21,16 +24,34 @@ function init(e) {
   e.stopPropagation();
 
   const overlay = document.getElementById('overlay');
+  Tone.start();
   overlay.remove();
 
   const gui = new GUI();
+  const effectsFolder = gui.addFolder(`Effects`);
+  effectsFolder.add(feedbackDelay.wet, 'value', 0.0, 0.5).name('Delay');
+  effectsFolder.add(shift.frequency, 'value', -200, 200).name('Shift');
+  effectsFolder.add(crusher.bits, 'value', 1, 16).name('Bit-Crush');
+  effectsFolder.open();
+
   let ballCount = 1;
+  let spacer = -6;
   const newMeshArray = [];
   const newButton = document.createElement('button');
   newButton.innerText = 'click to add ball';
+
   newButton.addEventListener('click', () => {
-    const ballExp = new ballClass();
+    const ballExp = new BallClass();
+    if (ballCount <= 1) {
+      ballExp.position.x = spacer;
+      ballExp.floor.position.x = spacer;
+    } else {
+      ballExp.position.x = spacer + ballCount;
+      ballExp.floor.position.x = spacer + ballCount;
+      spacer++;
+    }
     newMeshArray.push(ballExp);
+
     scene.add(ballExp);
     const ballFolder = gui.addFolder(`Ball ${ballCount}`);
     ballFolder.add(ballExp, 'acceleration', 100, 300);
@@ -38,14 +59,18 @@ function init(e) {
 
     ballFolder.open();
     ballCount++;
+    if (ballCount >= 8) {
+      document.getElementById('add-button-div').removeChild(newButton);
+    }
   });
   document.getElementById('add-button-div').appendChild(newButton);
 
   // Camera
 
-  camera.lookAt(0.0, 0.0, 0.0);
   camera.add(listener);
+  camera.lookAt(0.0, 0.0, 0.0);
   camera.updateMatrixWorld();
+
   camera.position.z = 15;
   camera.position.y = 15;
 
@@ -76,16 +101,12 @@ function init(e) {
   const controls = new OrbitControls(camera, renderer.domElement);
 
   // Floor Mesh
-  const planeGeo = new THREE.PlaneGeometry(30, 30, 10, 10);
-  const planeMat = new THREE.MeshStandardMaterial({
-    color: 0x818181,
-    side: THREE.DoubleSide,
-  });
-  const planeMesh = new THREE.Mesh(planeGeo, planeMat);
-  planeMesh.receiveShadow = true;
-  scene.add(planeMesh);
-  planeMesh.position.y = 0;
-  planeMesh.rotation.x = Math.PI / 2;
+  const bigFloor = new FloorClass();
+  bigFloor.scale.x = 20;
+  bigFloor.scale.y = 10;
+  bigFloor.position.y = -0.01;
+  bigFloor.position.z = 4;
+  scene.add(bigFloor);
 
   // Animate Function
   function animate() {
@@ -107,7 +128,13 @@ function init(e) {
       newMeshArray[i].time_counter += newMeshArray[i].time_step;
 
       if (newMeshArray[i].position.y === newMeshArray[i].bottom_position_y) {
+        newMeshArray[i].userData.isDown = true;
         newMeshArray[i].bounce();
+        newMeshArray[i].changeFloorColor();
+      } else {
+        newMeshArray[i].userData.isDown = false;
+
+        newMeshArray[i].changeFloorColor();
       }
     }
 
