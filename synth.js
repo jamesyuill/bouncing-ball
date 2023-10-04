@@ -7,7 +7,7 @@ export const feedbackDelay = new Tone.FeedbackDelay({
   delayTime: 0.5,
   feedback: 0.3,
   // maxDelay:2,
-  wet: 0.3,
+  wet: 0.01,
 });
 
 export const shift = new Tone.FrequencyShifter(0);
