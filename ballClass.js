@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-const FloorClass = require('./FloorClass');
+import FloorClass from './FloorClass';
 import { scene } from './main';
 // import { player } from './audioClip';
 import { synth, now } from './synth';
