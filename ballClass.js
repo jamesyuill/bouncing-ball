@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import * as Tone from 'tone';
-
+import { player } from './audioClip';
 import { synth, now } from './synth';
 // const synth = new Tone.PolySynth(Tone.Synth);
 // synth.set({ oscillator: { type: 'sine' } });
@@ -39,8 +39,9 @@ export default class ballClass extends THREE.Mesh {
     let notesArray = ['F4', 'G4', 'G#4', 'Bb4', 'C4', 'D4', 'E4', 'F4'];
     let randomNote = notesArray[Math.floor(Math.random() * 9)];
     this.bounce = () => {
-      synth.triggerAttack(randomNote, now);
-      synth.triggerRelease(randomNote);
+      player.start();
+      // synth.triggerAttack(randomNote, now);
+      // synth.triggerRelease(randomNote);
     };
   }
 }
