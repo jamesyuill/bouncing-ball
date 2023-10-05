@@ -18,8 +18,9 @@ const camera = new THREE.PerspectiveCamera(
 // Audio Loader
 
 const startButton = document.getElementById('startButton');
+
 const removeAllButton = document.createElement('button');
-removeAllButton.innerText = 'Remove All Balls!';
+removeAllButton.innerText = 'Reset!';
 
 const newButton = document.createElement('button');
 newButton.innerText = 'click to add ball';
@@ -67,12 +68,7 @@ newButton.addEventListener('click', () => {
 });
 
 function removeAllBalls() {
-  renderer.renderLists.dispose();
-  // newMeshArray.forEach((obj) => {
-  //   obj.geometry.dispose();
-  //   obj.material.dispose();
-  //   scene.remove(obj);
-  // });
+  location.reload();
 }
 
 // Camera
