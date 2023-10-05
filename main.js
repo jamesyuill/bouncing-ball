@@ -57,8 +57,8 @@ newButton.addEventListener('click', () => {
 
   scene.add(ballExp);
   const ballFolder = gui.addFolder(`Ball ${ballCount}`);
-  ballFolder.add(ballExp, 'acceleration', 100, 300);
-  ballFolder.add(ballExp, 'time_step', 0.01, 0.3);
+  ballFolder.add(ballExp, 'acceleration', 100, 300).name('Acceleration');
+  ballFolder.add(ballExp, 'time_step', 0.01, 0.3).name('BounceRate');
 
   ballFolder.open();
   ballCount++;
