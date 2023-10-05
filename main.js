@@ -6,16 +6,21 @@ import { GUI } from 'dat.gui';
 import BallClass from './components/ballClass';
 import FloorClass from './components/floorClass';
 import { crusher, shift, feedbackDelay } from './components/synth';
+
+// Camera / Scene / Renderer / Listener / Raycaster
+
 export const scene = new THREE.Scene();
 const listener = new THREE.AudioListener();
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+
 const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
-// Audio Loader
 
 const startButton = document.getElementById('startButton');
 
@@ -67,6 +72,7 @@ newButton.addEventListener('click', () => {
   }
 });
 
+// Blunt Reset Function
 function removeAllBalls() {
   location.reload();
 }
@@ -75,10 +81,9 @@ function removeAllBalls() {
 
 camera.add(listener);
 camera.lookAt(0.0, 0.0, 0.0);
-camera.updateMatrixWorld();
-
-camera.position.z = 15;
-camera.position.y = 15;
+// camera.updateMatrixWorld();
+camera.position.z = 12;
+camera.position.y = 3;
 
 // Renderer
 
@@ -104,7 +109,7 @@ light.shadow.camera.top = 20;
 light.shadow.camera.bottom = -20;
 
 // Orbit Controls
-const controls = new OrbitControls(camera, renderer.domElement);
+// const controls = new OrbitControls(camera, renderer.domElement);
 
 // Floor Mesh
 const bigFloor = new FloorClass();
@@ -113,6 +118,30 @@ bigFloor.scale.y = 10;
 bigFloor.position.y = -0.01;
 bigFloor.position.z = 4;
 scene.add(bigFloor);
+
+// Window resize
+window.addEventListener('resize', onWindowResize, false);
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+window.addEventListener('mousemove', mouseMove);
+function mouseMove(event) {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
+}
+
+raycaster.setFromCamera(mouse, camera);
+const intersects = raycaster.intersectObjects(scene.children);
+
+window.addEventListener('click', mouseClick);
+function mouseClick() {
+  if (intersects.length > 0) {
+    console.log(intersects);
+  }
+}
 
 // Animate Function
 function animate() {
@@ -144,7 +173,7 @@ function animate() {
     }
   }
 
-  controls.update();
+  // controls.update();
 
   renderer.render(scene, camera);
 }
