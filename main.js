@@ -23,23 +23,22 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-const startButton = document.getElementById('startButton');
 const ballStatsDiv = document.getElementById('ball-stats-div');
-const canvas = document.querySelector('canvas');
-const removeAllButton = document.createElement('button');
-removeAllButton.innerText = 'Reset!';
-removeAllButton.className = 'resetButton';
+const startButton = document.getElementById('startButton');
+const addBallsButton = document.getElementById('add-balls-button');
+const resetButton = document.getElementById('reset-button');
 
-const newButton = document.createElement('button');
-newButton.innerText = 'Add Balls!';
-newButton.className = 'addButton';
 startButton.addEventListener('click', () => {
   Tone.start();
-  document.getElementById('container').removeChild(startButton);
-  document.getElementById('container').appendChild(newButton);
-  document.getElementById('container').appendChild(removeAllButton);
+  startButton.classList.add('disabled');
+  startButton.disabled = true;
+  addBallsButton.classList.remove('disabled');
+  addBallsButton.disabled = false;
+  resetButton.classList.remove('disabled');
+  resetButton.disabled = false;
 });
-removeAllButton.addEventListener('click', removeAllBalls);
+
+resetButton.addEventListener('click', removeAllBalls);
 
 const gui = new GUI();
 const effectsFolder = gui.addFolder(`Effects`);
@@ -52,8 +51,10 @@ let ballCount = 1;
 let spacer = -6;
 let newMeshArray = [];
 let newFloorArray = [];
+let intersects;
+let chosen;
 
-newButton.addEventListener('click', () => {
+addBallsButton.addEventListener('click', () => {
   const ballExp = new BallClass();
   if (ballCount <= 1) {
     ballExp.position.x = spacer;
@@ -81,7 +82,7 @@ newButton.addEventListener('click', () => {
   ballFolder.open();
   ballCount++;
   if (ballCount >= 8) {
-    document.getElementById('add-button-div').removeChild(newButton);
+    document.getElementById('add-button-div').removeChild(addBallsButton);
   }
 });
 
@@ -148,35 +149,28 @@ function mouseMove(event) {
 
 function hoverBall() {
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(newFloorArray);
+  intersects = raycaster.intersectObjects(newFloorArray);
 
   for (let i = 0; i < intersects.length; i++) {
     if (intersects[i].object instanceof FloorClass) {
-      let chosen = newMeshArray.filter((obj) => {
+      chosen = newMeshArray.filter((obj) => {
         return obj.userData.id === intersects[i].object.userData.id;
       });
       chosen[0].changeBallAndFloorColour();
-      ballStatsBox(chosen[0].background);
-      // ballStatsDiv.innerText = chosen[0].userData.id;
-      // ballStatsDiv.className = 'ball-stats-div';
     }
   }
 }
 
-let boxPosition = new THREE.Vector3();
-
-function ballStatsBox(selectedBall) {
-  boxPosition.setFromMatrixPosition(selectedBall.matrixWorld);
-  boxPosition.project(camera);
-
-  let widthHalf = window.innerWidth / 2;
-  let heightHalf = window.innerHeight / 2;
-  boxPosition.x = boxPosition.x * widthHalf + widthHalf;
-  boxPosition.y = -(boxPosition.y * heightHalf) + heightHalf;
-  ballStatsDiv.style.top = `${boxPosition.y}px`;
-  ballStatsDiv.style.left = `${boxPosition.x}px`;
-  ballStatsDiv.innerText = 'hello';
-}
+window.addEventListener('click', () => {
+  for (let i = 0; i < intersects.length; i++) {
+    if (intersects[i].object instanceof FloorClass) {
+      chosen = newMeshArray.filter((obj) => {
+        return obj.userData.id === intersects[i].object.userData.id;
+      });
+      chosen[0].displayBallStats();
+    }
+  }
+});
 
 // Animate Function
 function animate() {

@@ -71,5 +71,9 @@ export default class BallClass extends THREE.Mesh {
       this.floor.material.color.setHex(0x00ff00);
       this.background.material.color.setHex(0x00ff00);
     };
+
+    this.displayBallStats = () => {
+      console.log(randomNote);
+    };
   }
 }

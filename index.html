@@ -3,13 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Balls Dropping</title>
   </head>
   <body>
-    <div class="container" id="container">
-      <button id="startButton">Start!</button>
+    <div id="container" class="container">
+      <div id="start-button-div">
+        <button id="startButton" class="startButton">Start!</button>
+      </div>
+      <div id="add-button-div" class="add-button-div">
+        <button
+          class="addButton disabled"
+          id="add-balls-button"
+          disabled="true"
+        >
+          Add Balls!
+        </button>
+      </div>
+      <div>
+        <button class="resetButton disabled" id="reset-button" disabled="true">
+          Reset!
+        </button>
+      </div>
     </div>
-    <div id="ball-stats-div"></div>
+
     <script type="module" src="/main.js"></script>
   </body>
 </html>
