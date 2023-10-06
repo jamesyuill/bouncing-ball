@@ -27,14 +27,16 @@ const startButton = document.getElementById('startButton');
 
 const removeAllButton = document.createElement('button');
 removeAllButton.innerText = 'Reset!';
+removeAllButton.className = 'resetButton';
 
 const newButton = document.createElement('button');
-newButton.innerText = 'click to add ball';
+newButton.innerText = 'Add Balls!';
+newButton.className = 'addButton';
 startButton.addEventListener('click', () => {
   Tone.start();
-  document.getElementById('start-button-div').removeChild(startButton);
-  document.getElementById('add-button-div').appendChild(newButton);
-  document.getElementById('add-button-div').appendChild(removeAllButton);
+  document.getElementById('container').removeChild(startButton);
+  document.getElementById('container').appendChild(newButton);
+  document.getElementById('container').appendChild(removeAllButton);
 });
 removeAllButton.addEventListener('click', removeAllBalls);
 

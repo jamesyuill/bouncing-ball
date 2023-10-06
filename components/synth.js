@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
 
 export const synth = new Tone.PolySynth(Tone.Synth);
-synth.set({ oscillator: { type: 'sine' } });
+synth.set({ oscillator: { type: 'sine' }, volume: -7 });
 export const now = Tone.now();
 export const feedbackDelay = new Tone.FeedbackDelay({
   delayTime: 0.5,
