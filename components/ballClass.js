@@ -19,11 +19,12 @@ export default class BallClass extends THREE.Mesh {
     );
     this.initial_speed = this.acceleration * this.time_counter;
     let x = 0;
-    let z = 0;
+    let z = 1;
 
     this.position.set(x, 0.7, z);
-    this.castShadow = true;
-    this.userData.id = Date.now();
+    // this.castShadow = true;
+    let ball_id = Date.now();
+    this.userData.id = ball_id;
     this.userData.isDown = false;
 
     let notesArray = ['C4', 'Eb4', 'G4', 'Bb4', 'D4', 'F4', 'Ab4'];
@@ -39,15 +40,36 @@ export default class BallClass extends THREE.Mesh {
     this.floor = new FloorClass();
     this.floor.scale.y = 10;
     this.floor.position.z = 4;
-    scene.add(this.floor);
+    this.floor.userData.id = ball_id;
+    // scene.add(this.floor);
 
-    this.changeFloorColor = () => {
+    this.background = new FloorClass();
+    this.background.scale.y = 9;
+    this.background.rotation.x = 3.15;
+    this.background.position.y = 4;
+    this.background.position.z = -1;
+    this.background.userData.id = ball_id;
+
+    this.background.material.color.set(0x818181);
+
+    this.changeFloorColorOnBounce = () => {
       if (this.userData.isDown) {
         this.floor.material.color.setHex(0xff0000);
+        this.material.color.setHex(0xff0000);
+        this.background.material.color.setHex(0x818181);
+
         setTimeout(() => {
           this.floor.material.color.setHex(0xffffff);
-        }, 100);
+          this.material.color.setHex(0xff0000);
+          this.background.material.color.setHex(0x818181);
+        }, 50);
       }
+    };
+
+    this.changeBallAndFloorColour = () => {
+      this.material.color.setHex(0x00ff00);
+      this.floor.material.color.setHex(0x00ff00);
+      this.background.material.color.setHex(0x00ff00);
     };
   }
 }

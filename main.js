@@ -13,6 +13,7 @@ export const scene = new THREE.Scene();
 const listener = new THREE.AudioListener();
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 
 const camera = new THREE.PerspectiveCamera(
@@ -47,20 +48,29 @@ effectsFolder.open();
 let ballCount = 1;
 let spacer = -6;
 let newMeshArray = [];
+let newFloorArray = [];
 
 newButton.addEventListener('click', () => {
   const ballExp = new BallClass();
   if (ballCount <= 1) {
     ballExp.position.x = spacer;
     ballExp.floor.position.x = spacer;
+    ballExp.background.position.x = spacer;
   } else {
     ballExp.position.x = spacer + ballCount;
     ballExp.floor.position.x = spacer + ballCount;
+    ballExp.background.position.x = spacer + ballCount;
+
     spacer++;
   }
   newMeshArray.push(ballExp);
 
   scene.add(ballExp);
+  newFloorArray.push(ballExp.floor);
+  scene.add(ballExp.floor);
+  newFloorArray.push(ballExp.background);
+
+  scene.add(ballExp.background);
   const ballFolder = gui.addFolder(`Ball ${ballCount}`);
   ballFolder.add(ballExp, 'acceleration', 100, 300).name('Acceleration');
   ballFolder.add(ballExp, 'time_step', 0.01, 0.3).name('BounceRate');
@@ -82,7 +92,7 @@ function removeAllBalls() {
 camera.add(listener);
 camera.lookAt(0.0, 0.0, 0.0);
 // camera.updateMatrixWorld();
-camera.position.z = 12;
+camera.position.z = 10;
 camera.position.y = 3;
 
 // Renderer
@@ -127,26 +137,29 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-window.addEventListener('mousemove', mouseMove);
+window.addEventListener('mousemove', mouseMove, false);
 function mouseMove(event) {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = (event.clientY / window.innerHeight) * 2 + 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
-raycaster.setFromCamera(mouse, camera);
-const intersects = raycaster.intersectObjects(scene.children);
+function selectBall() {
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(newFloorArray);
 
-window.addEventListener('click', mouseClick);
-function mouseClick() {
-  if (intersects.length > 0) {
-    console.log(intersects);
+  for (let i = 0; i < intersects.length; i++) {
+    if (intersects[i].object instanceof FloorClass) {
+      let chosen = newMeshArray.filter((obj) => {
+        return obj.userData.id === intersects[i].object.userData.id;
+      });
+      chosen[0].changeBallAndFloorColour();
+    }
   }
 }
 
 // Animate Function
 function animate() {
-  requestAnimationFrame(animate);
-
+  selectBall();
   for (let i = 0; i < newMeshArray.length; i++) {
     if (newMeshArray[i].position.y < newMeshArray[i].bottom_position_y) {
       newMeshArray[i].time_counter = 0;
@@ -165,16 +178,17 @@ function animate() {
     if (newMeshArray[i].position.y === newMeshArray[i].bottom_position_y) {
       newMeshArray[i].userData.isDown = true;
       newMeshArray[i].bounce();
-      newMeshArray[i].changeFloorColor();
+      newMeshArray[i].changeFloorColorOnBounce();
     } else {
       newMeshArray[i].userData.isDown = false;
 
-      newMeshArray[i].changeFloorColor();
+      newMeshArray[i].changeFloorColorOnBounce();
     }
   }
 
   // controls.update();
-
   renderer.render(scene, camera);
+
+  requestAnimationFrame(animate);
 }
 animate();
