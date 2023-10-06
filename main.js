@@ -24,7 +24,8 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 const startButton = document.getElementById('startButton');
-
+const ballStatsDiv = document.getElementById('ball-stats-div');
+const canvas = document.querySelector('canvas');
 const removeAllButton = document.createElement('button');
 removeAllButton.innerText = 'Reset!';
 removeAllButton.className = 'resetButton';
@@ -145,7 +146,7 @@ function mouseMove(event) {
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
-function selectBall() {
+function hoverBall() {
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(newFloorArray);
 
@@ -155,13 +156,31 @@ function selectBall() {
         return obj.userData.id === intersects[i].object.userData.id;
       });
       chosen[0].changeBallAndFloorColour();
+      ballStatsBox(chosen[0].background);
+      // ballStatsDiv.innerText = chosen[0].userData.id;
+      // ballStatsDiv.className = 'ball-stats-div';
     }
   }
 }
 
+let boxPosition = new THREE.Vector3();
+
+function ballStatsBox(selectedBall) {
+  boxPosition.setFromMatrixPosition(selectedBall.matrixWorld);
+  boxPosition.project(camera);
+
+  let widthHalf = window.innerWidth / 2;
+  let heightHalf = window.innerHeight / 2;
+  boxPosition.x = boxPosition.x * widthHalf + widthHalf;
+  boxPosition.y = -(boxPosition.y * heightHalf) + heightHalf;
+  ballStatsDiv.style.top = `100px`;
+  ballStatsDiv.style.left = `${boxPosition.x}px`;
+}
+
 // Animate Function
 function animate() {
-  selectBall();
+  hoverBall();
+
   for (let i = 0; i < newMeshArray.length; i++) {
     if (newMeshArray[i].position.y < newMeshArray[i].bottom_position_y) {
       newMeshArray[i].time_counter = 0;
