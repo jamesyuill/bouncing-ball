@@ -173,8 +173,9 @@ function ballStatsBox(selectedBall) {
   let heightHalf = window.innerHeight / 2;
   boxPosition.x = boxPosition.x * widthHalf + widthHalf;
   boxPosition.y = -(boxPosition.y * heightHalf) + heightHalf;
-  ballStatsDiv.style.top = `100px`;
+  ballStatsDiv.style.top = `${boxPosition.y}px`;
   ballStatsDiv.style.left = `${boxPosition.x}px`;
+  ballStatsDiv.innerText = 'hello';
 }
 
 // Animate Function

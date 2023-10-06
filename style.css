@@ -58,7 +58,7 @@ body {
   z-index: 2;
 }
 
-.ball-stats-div {
+#ball-stats-div {
   position: absolute;
   top: 0;
   left: 0;
@@ -68,8 +68,6 @@ body {
   padding: 1rem;
   width: 200px;
   background-color: aqua;
-  border: 1px solid white;
-  color: white;
   border-radius: 3px;
-  z-index: 10;
+  z-index: 12;
 }
