@@ -75,11 +75,11 @@ addBallsButton.addEventListener('click', () => {
   newFloorArray.push(ballExp.background);
 
   scene.add(ballExp.background);
-  const ballFolder = gui.addFolder(`Ball ${ballCount}`);
-  ballFolder.add(ballExp, 'acceleration', 100, 300).name('Acceleration');
-  ballFolder.add(ballExp, 'time_step', 0.01, 0.3).name('BounceRate');
-
-  ballFolder.open();
+  // const ballFolder = gui.addFolder(`Ball ${ballCount}`);
+  // ballFolder.add(ballExp, 'acceleration', 100, 300).name('Acceleration');
+  // ballFolder.add(ballExp, 'time_step', 0.01, 0.3).name('BounceRate');
+  // ballFolder.open();
+  ballExp.userData.name = `Ball ${ballCount}`;
   ballCount++;
   if (ballCount >= 8) {
     document.getElementById('add-button-div').removeChild(addBallsButton);
@@ -167,10 +167,36 @@ window.addEventListener('click', () => {
       chosen = newMeshArray.filter((obj) => {
         return obj.userData.id === intersects[i].object.userData.id;
       });
-      chosen[0].displayBallStats();
+      displayBallStats(chosen[0]);
     }
   }
 });
+
+function displayBallStats(selectedBall) {
+  const ballNum = document.getElementById('ball-number');
+  ballNum.innerText = selectedBall.userData.name;
+
+  const accelerationRate = document.getElementById('acceleration');
+  accelerationRate.innerText = selectedBall.acceleration;
+  const sliderAcc = document.getElementById('slider-acc');
+  sliderAcc.value = selectedBall.acceleration;
+  sliderAcc.oninput = function () {
+    selectedBall.acceleration = sliderAcc.value;
+    accelerationRate.innerText = sliderAcc.value;
+  };
+
+  const bounceRate = document.getElementById('bounce-rate');
+  bounceRate.innerText = selectedBall.time_step;
+
+  const sliderBounce = document.getElementById('slider-bounce');
+  sliderBounce.value = selectedBall.time_step;
+  sliderBounce.oninput = function (e) {
+    let adjustedRate = e.target.value / 100;
+
+    selectedBall.time_step = adjustedRate;
+    bounceRate.innerText = adjustedRate;
+  };
+}
 
 // Animate Function
 function animate() {

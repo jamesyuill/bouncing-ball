@@ -25,8 +25,42 @@
           Reset!
         </button>
       </div>
-    </div>
 
+      <div id="ball-stats" class="ball-stats-div">
+        <div class="flex-row">
+          <label for="ball-number">Ball Number: </label>
+          <p id="ball-number"></p>
+        </div>
+
+        <div class="flex-row">
+          <label for="acceleration">Acceleration: </label>
+          <p id="acceleration"></p>
+        </div>
+
+        <input
+          type="range"
+          min="100"
+          max="300"
+          value="50"
+          class="slider"
+          id="slider-acc"
+        />
+
+        <div class="flex-row">
+          <label for="bounce-rate">Bounce Rate: </label>
+          <p id="bounce-rate"></p>
+        </div>
+
+        <input
+          type="range"
+          min="1"
+          max="20"
+          value="1"
+          class="slider"
+          id="slider-bounce"
+        />
+      </div>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>
