@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
 import BallClass from './components/ballClass';
 import FloorClass from './components/floorClass';
-import { crusher, shift, feedbackDelay } from './components/synth';
+import { synth, feedbackDelay } from './components/synth';
 
 // Camera / Scene / Renderer / Listener / Raycaster
 
@@ -23,36 +23,36 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
+const ballStatsDiv = document.getElementById('ball-stats-div');
 const startButton = document.getElementById('startButton');
+const addBallsButton = document.getElementById('add-balls-button');
+const resetButton = document.getElementById('reset-button');
 
-const removeAllButton = document.createElement('button');
-removeAllButton.innerText = 'Reset!';
-removeAllButton.className = 'resetButton';
-
-const newButton = document.createElement('button');
-newButton.innerText = 'Add Balls!';
-newButton.className = 'addButton';
 startButton.addEventListener('click', () => {
   Tone.start();
-  document.getElementById('container').removeChild(startButton);
-  document.getElementById('container').appendChild(newButton);
-  document.getElementById('container').appendChild(removeAllButton);
+  startButton.classList.add('disabled');
+  startButton.disabled = true;
+  addBallsButton.classList.remove('disabled');
+  addBallsButton.disabled = false;
+  resetButton.classList.remove('disabled');
+  resetButton.disabled = false;
 });
-removeAllButton.addEventListener('click', removeAllBalls);
+
+resetButton.addEventListener('click', removeAllBalls);
 
 const gui = new GUI();
 const effectsFolder = gui.addFolder(`Effects`);
 effectsFolder.add(feedbackDelay.wet, 'value', 0.0, 0.5).name('Delay');
-effectsFolder.add(shift.frequency, 'value', -200, 200).name('Shift');
-effectsFolder.add(crusher.bits, 'value', 1, 16).name('Bit-Crush');
 effectsFolder.open();
 
 let ballCount = 1;
 let spacer = -6;
 let newMeshArray = [];
 let newFloorArray = [];
+let intersects;
+let chosen;
 
-newButton.addEventListener('click', () => {
+addBallsButton.addEventListener('click', () => {
   const ballExp = new BallClass();
   if (ballCount <= 1) {
     ballExp.position.x = spacer;
@@ -73,14 +73,11 @@ newButton.addEventListener('click', () => {
   newFloorArray.push(ballExp.background);
 
   scene.add(ballExp.background);
-  const ballFolder = gui.addFolder(`Ball ${ballCount}`);
-  ballFolder.add(ballExp, 'acceleration', 100, 300).name('Acceleration');
-  ballFolder.add(ballExp, 'time_step', 0.01, 0.3).name('BounceRate');
 
-  ballFolder.open();
+  ballExp.userData.name = `Ball ${ballCount}`;
   ballCount++;
   if (ballCount >= 8) {
-    document.getElementById('add-button-div').removeChild(newButton);
+    document.getElementById('add-button-div').removeChild(addBallsButton);
   }
 });
 
@@ -145,13 +142,13 @@ function mouseMove(event) {
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
 
-function selectBall() {
+function hoverBall() {
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(newFloorArray);
+  intersects = raycaster.intersectObjects(newFloorArray);
 
   for (let i = 0; i < intersects.length; i++) {
     if (intersects[i].object instanceof FloorClass) {
-      let chosen = newMeshArray.filter((obj) => {
+      chosen = newMeshArray.filter((obj) => {
         return obj.userData.id === intersects[i].object.userData.id;
       });
       chosen[0].changeBallAndFloorColour();
@@ -159,9 +156,61 @@ function selectBall() {
   }
 }
 
+window.addEventListener('click', () => {
+  for (let i = 0; i < intersects.length; i++) {
+    if (intersects[i].object instanceof FloorClass) {
+      chosen = newMeshArray.filter((obj) => {
+        return obj.userData.id === intersects[i].object.userData.id;
+      });
+
+      displayBallStats(chosen[0]);
+    }
+  }
+});
+
+function displayBallStats(selectedBall) {
+  const ballNum = document.getElementById('ball-number');
+  ballNum.innerText = selectedBall.userData.name;
+
+  const accelerationRate = document.getElementById('acceleration');
+  accelerationRate.innerText = selectedBall.acceleration;
+  const sliderAcc = document.getElementById('slider-acc');
+  sliderAcc.value = selectedBall.acceleration;
+  sliderAcc.oninput = function () {
+    selectedBall.acceleration = sliderAcc.value;
+    accelerationRate.innerText = sliderAcc.value;
+  };
+
+  const bounceRate = document.getElementById('bounce-rate');
+  bounceRate.innerText = selectedBall.time_step;
+
+  const sliderBounce = document.getElementById('slider-bounce');
+  sliderBounce.value = selectedBall.time_step;
+  sliderBounce.oninput = function (e) {
+    let adjustedRate = e.target.value / 100;
+
+    selectedBall.time_step = adjustedRate;
+    bounceRate.innerText = adjustedRate;
+  };
+
+  const noteHtml = document.getElementById('note');
+  noteHtml.innerText = selectedBall.userData.notePlaying;
+
+  const newNoteForm = document.getElementById('set-note-form');
+  newNoteForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formProps = Object.fromEntries(formData);
+    const { keyName, octaveNum } = formProps;
+    chosen[0].userData.notePlaying = keyName + octaveNum;
+    noteHtml.innerText = chosen[0].userData.notePlaying;
+  });
+}
+
 // Animate Function
 function animate() {
-  selectBall();
+  hoverBall();
+
   for (let i = 0; i < newMeshArray.length; i++) {
     if (newMeshArray[i].position.y < newMeshArray[i].bottom_position_y) {
       newMeshArray[i].time_counter = 0;

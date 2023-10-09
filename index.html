@@ -3,13 +3,95 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Balls Dropping</title>
   </head>
   <body>
-    <div class="container" id="container">
-      <button id="startButton">Start!</button>
-    </div>
+    <div id="container" class="container">
+      <div id="start-button-div">
+        <button id="startButton" class="startButton">Start!</button>
+      </div>
+      <div id="add-button-div" class="add-button-div">
+        <button
+          class="addButton disabled"
+          id="add-balls-button"
+          disabled="true"
+        >
+          Add Balls!
+        </button>
+      </div>
+      <div>
+        <button class="resetButton disabled" id="reset-button" disabled="true">
+          Reset!
+        </button>
+      </div>
 
+      <div id="ball-stats" class="ball-stats-div">
+        <div class="flex-row">
+          <label for="ball-number">Ball Number: </label>
+          <p id="ball-number" class="p-bold">Select a ball...</p>
+        </div>
+
+        <div class="flex-row">
+          <label for="acceleration">Acceleration: </label>
+          <p class="p-bold" id="acceleration"></p>
+        </div>
+
+        <input
+          type="range"
+          min="100"
+          max="300"
+          value="50"
+          class="slider"
+          id="slider-acc"
+        />
+
+        <div class="flex-row">
+          <label for="bounce-rate">Bounce Rate: </label>
+          <p id="bounce-rate" class="p-bold"></p>
+        </div>
+
+        <input
+          type="range"
+          min="1"
+          max="20"
+          value="1"
+          class="slider"
+          id="slider-bounce"
+        />
+
+        <div class="flex-row">
+          <label for="note">Note: </label>
+          <p id="note" class="p-bold"></p>
+        </div>
+
+        <form id="set-note-form" class="flex-row">
+          <select name="keyName" id="keyName">
+            <option value="C">C</option>
+            <option value="Db">Db</option>
+            <option value="D">D</option>
+            <option value="Eb">Eb</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="G">G</option>
+            <option value="Ab">Ab</option>
+            <option value="A">A</option>
+            <option value="Bb">Bb</option>
+            <option value="B">B</option>
+          </select>
+          <select name="octaveNum" id="octaveNum">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <button type="submit">Set Note</button>
+        </form>
+      </div>
+    </div>
     <script type="module" src="/main.js"></script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 body {
+  font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   box-sizing: border-box;
 }
@@ -9,18 +10,31 @@ body {
   left: 0;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
   gap: 1rem;
   padding: 1rem;
   border: 1px solid black;
   border-radius: 3px;
+  width: 180px;
 }
 
-#startButton {
+.startButton {
   background-color: green;
   color: white;
   padding: 0.5rem;
   border-radius: 3px;
   border: none;
+  width: 100%;
+}
+
+.startButton:hover {
+  background-color: rgb(104, 164, 104);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 3px;
+  border: none;
+  width: 100%;
 }
 
 .addButton {
@@ -29,6 +43,16 @@ body {
   padding: 0.5rem;
   border-radius: 3px;
   border: none;
+  width: 100%;
+}
+
+.addButton:hover {
+  background-color: rgb(104, 164, 104);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 3px;
+  border: none;
+  width: 100%;
 }
 
 .resetButton {
@@ -37,23 +61,55 @@ body {
   padding: 0.5rem;
   border-radius: 3px;
   border: none;
+  width: 100%;
 }
 
-.start-button-div {
-  display: flex;
-  justify-content: center;
-
-  margin-top: 50px;
-  position: relative;
-  z-index: 2;
+.resetButton:hover {
+  background-color: rgb(255, 130, 130);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 3px;
+  border: none;
+  width: 100%;
 }
 
-.add-button-div {
+.disabled {
+  background-color: grey;
+}
+
+.disabled:hover {
+  background-color: grey;
+}
+
+.ball-stats-div {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 50px;
-  position: relative;
-  z-index: 2;
+  gap: 0.5rem;
+  padding: 0.2rem;
+  margin: 0.2rem;
+  width: 93%;
+  border: 2px solid black;
+  border-radius: 3px;
+  font-size: 0.7rem;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: aqua;
+  padding: 0.5rem 0.5rem;
+}
+
+.p-bold {
+  margin: 0;
+
+  padding: 0;
+  font-weight: 800;
+}
+
+.slider {
+  margin: 0;
+  padding: 0;
 }

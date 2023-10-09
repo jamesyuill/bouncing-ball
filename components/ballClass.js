@@ -29,12 +29,12 @@ export default class BallClass extends THREE.Mesh {
 
     let notesArray = ['C4', 'Eb4', 'G4', 'Bb4', 'D4', 'F4', 'Ab4'];
     let randomNote = notesArray[Math.floor(Math.random() * 7)];
-
+    this.userData.notePlaying = randomNote;
     this.bounce = () => {
       // player.start();
 
-      synth.triggerAttack(randomNote, now);
-      synth.triggerRelease(randomNote);
+      synth.triggerAttack(this.userData.notePlaying, now);
+      synth.triggerRelease(this.userData.notePlaying);
     };
 
     this.floor = new FloorClass();

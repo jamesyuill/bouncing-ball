@@ -10,10 +10,6 @@ export const feedbackDelay = new Tone.FeedbackDelay({
   wet: 0.01,
 });
 
-export const shift = new Tone.FrequencyShifter(0);
+synth.connect(feedbackDelay);
 
-export const crusher = new Tone.BitCrusher(16);
-synth.connect(shift);
-shift.connect(crusher);
-crusher.connect(feedbackDelay);
 feedbackDelay.toDestination();
