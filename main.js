@@ -162,6 +162,7 @@ window.addEventListener('click', () => {
       chosen = newMeshArray.filter((obj) => {
         return obj.userData.id === intersects[i].object.userData.id;
       });
+
       displayBallStats(chosen[0]);
     }
   }
@@ -201,8 +202,8 @@ function displayBallStats(selectedBall) {
     const formData = new FormData(e.target);
     const formProps = Object.fromEntries(formData);
     const { keyName, octaveNum } = formProps;
-    selectedBall.userData.notePlaying = keyName + octaveNum;
-    noteHtml.innerText = selectedBall.userData.notePlaying;
+    chosen[0].userData.notePlaying = keyName + octaveNum;
+    noteHtml.innerText = chosen[0].userData.notePlaying;
   });
 }
 

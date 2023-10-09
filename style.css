@@ -84,7 +84,8 @@ body {
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.2rem;
-  width: 100%;
+  margin: 0.2rem;
+  width: 92%;
   border: 2px solid black;
   border-radius: 3px;
   font-size: 0.7rem;
