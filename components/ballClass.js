@@ -29,7 +29,7 @@ export default class BallClass extends THREE.Mesh {
 
     let notesArray = ['C4', 'Eb4', 'G4', 'Bb4', 'D4', 'F4', 'Ab4'];
     let randomNote = notesArray[Math.floor(Math.random() * 7)];
-
+    this.userData.notePlaying = randomNote;
     this.bounce = () => {
       // player.start();
 
@@ -70,6 +70,11 @@ export default class BallClass extends THREE.Mesh {
       this.material.color.setHex(0x00ff00);
       this.floor.material.color.setHex(0x00ff00);
       this.background.material.color.setHex(0x00ff00);
+    };
+
+    this.newNote = (note) => {
+      synth.triggerAttack(note, now);
+      synth.triggerRelease(note);
     };
   }
 }

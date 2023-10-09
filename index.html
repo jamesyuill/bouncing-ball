@@ -59,6 +59,37 @@
           class="slider"
           id="slider-bounce"
         />
+
+        <div class="flex-row">
+          <label for="note">Note: </label>
+          <p id="note"></p>
+        </div>
+
+        <form id="set-note-form">
+          <select name="keyName" id="keyName">
+            <option value="C">C</option>
+            <option value="Db">Db</option>
+            <option value="D">D</option>
+            <option value="Eb">Eb</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="G">G</option>
+            <option value="Ab">Ab</option>
+            <option value="A">A</option>
+            <option value="Bb">Bb</option>
+            <option value="B">B</option>
+          </select>
+          <select name="octaveNum" id="octaveNum">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <button type="submit">Set Note</button>
+        </form>
       </div>
     </div>
     <script type="module" src="/main.js"></script>

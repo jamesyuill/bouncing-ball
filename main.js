@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
 import BallClass from './components/ballClass';
 import FloorClass from './components/floorClass';
-import { crusher, shift, feedbackDelay } from './components/synth';
+import { synth, crusher, shift, feedbackDelay } from './components/synth';
 
 // Camera / Scene / Renderer / Listener / Raycaster
 
@@ -196,6 +196,18 @@ function displayBallStats(selectedBall) {
     selectedBall.time_step = adjustedRate;
     bounceRate.innerText = adjustedRate;
   };
+
+  const noteHtml = document.getElementById('note');
+  noteHtml.innerText = selectedBall.userData.notePlaying;
+
+  const newNoteForm = document.getElementById('set-note-form');
+  newNoteForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const formProps = Object.fromEntries(formData);
+    console.log(formProps);
+  });
+  // selectedBall.newNote(selectedBall.userData.notePlaying);
 }
 
 // Animate Function
