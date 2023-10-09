@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'dat.gui';
 import BallClass from './components/ballClass';
 import FloorClass from './components/floorClass';
-import { synth, crusher, shift, feedbackDelay } from './components/synth';
+import { synth, feedbackDelay } from './components/synth';
 
 // Camera / Scene / Renderer / Listener / Raycaster
 
@@ -43,8 +43,6 @@ resetButton.addEventListener('click', removeAllBalls);
 const gui = new GUI();
 const effectsFolder = gui.addFolder(`Effects`);
 effectsFolder.add(feedbackDelay.wet, 'value', 0.0, 0.5).name('Delay');
-effectsFolder.add(shift.frequency, 'value', -200, 200).name('Shift');
-effectsFolder.add(crusher.bits, 'value', 1, 16).name('Bit-Crush');
 effectsFolder.open();
 
 let ballCount = 1;
@@ -75,10 +73,7 @@ addBallsButton.addEventListener('click', () => {
   newFloorArray.push(ballExp.background);
 
   scene.add(ballExp.background);
-  // const ballFolder = gui.addFolder(`Ball ${ballCount}`);
-  // ballFolder.add(ballExp, 'acceleration', 100, 300).name('Acceleration');
-  // ballFolder.add(ballExp, 'time_step', 0.01, 0.3).name('BounceRate');
-  // ballFolder.open();
+
   ballExp.userData.name = `Ball ${ballCount}`;
   ballCount++;
   if (ballCount >= 8) {
@@ -205,9 +200,10 @@ function displayBallStats(selectedBall) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const formProps = Object.fromEntries(formData);
-    console.log(formProps);
+    const { keyName, octaveNum } = formProps;
+    selectedBall.userData.notePlaying = keyName + octaveNum;
+    noteHtml.innerText = selectedBall.userData.notePlaying;
   });
-  // selectedBall.newNote(selectedBall.userData.notePlaying);
 }
 
 // Animate Function

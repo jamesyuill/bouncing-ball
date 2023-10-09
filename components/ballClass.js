@@ -33,8 +33,8 @@ export default class BallClass extends THREE.Mesh {
     this.bounce = () => {
       // player.start();
 
-      synth.triggerAttack(randomNote, now);
-      synth.triggerRelease(randomNote);
+      synth.triggerAttack(this.userData.notePlaying, now);
+      synth.triggerRelease(this.userData.notePlaying);
     };
 
     this.floor = new FloorClass();
@@ -70,11 +70,6 @@ export default class BallClass extends THREE.Mesh {
       this.material.color.setHex(0x00ff00);
       this.floor.material.color.setHex(0x00ff00);
       this.background.material.color.setHex(0x00ff00);
-    };
-
-    this.newNote = (note) => {
-      synth.triggerAttack(note, now);
-      synth.triggerRelease(note);
     };
   }
 }
