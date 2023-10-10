@@ -40,10 +40,20 @@ startButton.addEventListener('click', () => {
 
 resetButton.addEventListener('click', removeAllBalls);
 
-const gui = new GUI();
-const effectsFolder = gui.addFolder(`Effects`);
-effectsFolder.add(feedbackDelay.wet, 'value', 0.0, 0.5).name('Delay');
-effectsFolder.open();
+const delayAmount = document.getElementById('delay');
+delayAmount.innerText = feedbackDelay.wet.value;
+const sliderDelay = document.getElementById('slider-delay');
+sliderDelay.value = feedbackDelay.wet.value;
+sliderDelay.oninput = function (e) {
+  let adjustedRate = e.target.value / 100;
+  feedbackDelay.wet.value = adjustedRate;
+  delayAmount.innerText = adjustedRate;
+};
+
+// const gui = new GUI();
+// const effectsFolder = gui.addFolder(`Effects`);
+// effectsFolder.add(feedbackDelay.wet, 'value', 0.0, 0.5).name('Delay');
+// effectsFolder.open();
 
 let ballCount = 1;
 let spacer = -6;
@@ -92,6 +102,7 @@ function removeAllBalls() {
 camera.add(listener);
 camera.lookAt(0.0, 0.0, 0.0);
 // camera.updateMatrixWorld();
+camera.position.x = -2;
 camera.position.z = 10;
 camera.position.y = 3;
 
@@ -149,10 +160,10 @@ function hoverBall() {
 
   for (let i = 0; i < intersects.length; i++) {
     if (intersects[i].object instanceof FloorClass) {
-      chosen = newMeshArray.filter((obj) => {
+      let hovered = newMeshArray.filter((obj) => {
         return obj.userData.id === intersects[i].object.userData.id;
       });
-      chosen[0].changeBallAndFloorColour();
+      hovered[0].changeBallAndFloorColour();
     }
   }
 }
@@ -170,6 +181,7 @@ window.addEventListener('click', () => {
 });
 
 function displayBallStats(selectedBall) {
+  console.log(chosen[0].userData.notePlaying);
   const ballNum = document.getElementById('ball-number');
   ballNum.innerText = selectedBall.userData.name;
 

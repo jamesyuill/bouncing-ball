@@ -25,7 +25,7 @@
           Reset!
         </button>
       </div>
-
+      <div class="top-right">Select a ball to change it's attributes</div>
       <div id="ball-stats" class="ball-stats-div">
         <div class="flex-row">
           <label for="ball-number">Ball Number: </label>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="flex-row">
-          <label for="acceleration">Acceleration: </label>
+          <label for="acceleration">Bounce-Height: </label>
           <p class="p-bold" id="acceleration"></p>
         </div>
 
@@ -90,6 +90,21 @@
           </select>
           <button type="submit" class="submit-button">Set Note</button>
         </form>
+      </div>
+      <div class="effects-gui">
+        <div class="flex-row">
+          <label for="delay">Delay: </label>
+          <p id="delay" class="p-bold"></p>
+        </div>
+
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value="1"
+          class="slider"
+          id="slider-delay"
+        />
       </div>
     </div>
     <script type="module" src="/main.js"></script>
