@@ -77,7 +77,8 @@ addBallsButton.addEventListener('click', () => {
   ballExp.userData.name = `Ball ${ballCount}`;
   ballCount++;
   if (ballCount >= 8) {
-    document.getElementById('add-button-div').removeChild(addBallsButton);
+    addBallsButton.classList.add('disabled');
+    addBallsButton.disabled = true;
   }
 });
 
